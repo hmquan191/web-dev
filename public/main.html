@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MEDIMATE</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">MEDIMATE</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#" id="home-link">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#" id="register-link">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#" id="login-link">Login</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="jumbotron" id="home-section">
+            <h1 class="display-4">Medimate xin chào!!!</h1>
+            <p class="lead">Trời ơi nguyên cái buổi chiều của tao, bug đ gì nhiều vl ☠️</p>
+            <hr class="my-4">
+            <p>dòng này để cảm ơn OpenAI đã tạo ra chatgpt</p>
+            <a class="btn btn-primary btn-lg" id="map-button" role="button">Show Office Location</a>
+            <div id="map-container" class="mt-4" style="display: none;">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.635863047679!2d106.6797512748822!3d10.762521589385408!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f1bfc262bf1%3A0x4e843897f2900135!2zMjI3IMSQLiBOZ3V54buFbiBWxINuIEPhu6ssIFBoxrDhu51uZyA0LCBRdeG6rW4gNSwgSOG7kyBDaMOtIE1pbmgsIFZpZXRuYW0!5e0!3m2!1sen!2s!4v1719542641773!5m2!1sen!2s" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+
+        <!-- Login Form -->
+        <div id="login-section" style="display: none;">
+            <h2>Login</h2>
+            <form id="login-form">
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <button type="submit" class="btn btn-primary">Login</button>
+                <p id="loginMessage" class="mt-2"></p>
+            </form>
+        </div>
+
+        <!-- Register Form -->
+        <div id="register-section" style="display: none;">
+            <h2>Register</h2>
+            <form id="register-form">
+                <input type="text" name="name" placeholder="Name" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <input type="password" name="passwordConfirm" placeholder="Confirm Password" required>
+                <button type="submit" class="btn btn-primary">Register</button>
+                <p id="registerMessage" class="mt-2"></p>
+            </form>
+        </div>
+
+        <!-- Doctor Register Form -->
+        <div id="register-doctor-section" style="display: none;">
+            <h2>Register as Doctor</h2>
+            <form id="register-doctor-form">
+                <input type="text" name="doctorName" placeholder="Doctor Name" required>
+                <input type="text" name="specialization" placeholder="Specialization" required>
+                <button type="submit" class="btn btn-primary">Register</button>
+                <p id="registerDoctorMessage" class="mt-2"></p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('home-link').addEventListener('click', function () {
+            showSection('home-section');
+        });
+
+        document.getElementById('login-link').addEventListener('click', function () {
+            showSection('login-section');
+        });
+
+        document.getElementById('register-link').addEventListener('click', function () {
+            showSection('register-section');
+        });
+
+        async function showSection(sectionId) {
+            const sections = ['home-section', 'login-section', 'register-section', 'register-doctor-section'];
+            sections.forEach(id => {
+                document.getElementById(id).style.display = (id === sectionId) ? 'block' : 'none';
+            });
+        }
+
+        document.getElementById('login-form').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json(); // Assuming server returns JSON
+
+                if (response.ok) {
+                    // Store user details in sessionStorage
+                    sessionStorage.setItem('userId', result.userId);
+                    sessionStorage.setItem('userName', result.userName);
+                    sessionStorage.setItem('userRole', result.userRole);
+
+                    // Redirect to profile.html upon successful login
+                    window.location.href = '/profile.html';
+                } else {
+                    document.getElementById('loginMessage').textContent = result.message || 'Login failed';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('loginMessage').textContent = 'An error occurred during login';
+            }
+        });
+
+        document.getElementById('register-form').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                document.getElementById('registerMessage').textContent = result.message;
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('registerMessage').textContent = 'An error occurred during registration';
+            }
+        });
+
+        document.getElementById('register-doctor-form').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const response = await fetch('/auth/register-doctor', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                document.getElementById('registerDoctorMessage').textContent = result.message;
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('registerDoctorMessage').textContent = 'An error occurred during doctor registration';
+            }
+        });
+
+        document.getElementById('map-button').addEventListener('click', function () {
+            const mapContainer = document.getElementById('map-container');
+            if (mapContainer.style.display === 'none' || mapContainer.style.display === '') {
+                mapContainer.style.display = 'block';
+            } else {
+                mapContainer.style.display = 'none';
+            }
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
