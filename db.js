@@ -147,6 +147,18 @@ const updateAppointmentStatus = async (appointmentId, status) => {
     await query(sql, [status, appointmentId]);
 };
 
+// Function to insert a new rating
+const insertRating = async (name, stars, comment) => {
+    const sql = 'INSERT INTO rating (name, stars, comment) VALUES (?, ?, ?)';
+    await query(sql, [name, stars, comment]);
+};
+
+// Function to get all ratings
+const getAllRatings = async () => {
+    const sql = 'SELECT * FROM rating';
+    return await query(sql);
+};
+
 module.exports = {
     query,
     // Forum methods
@@ -168,6 +180,10 @@ module.exports = {
     getAppointmentsByDoctor,
     updateAppointmentStatus,
     // isAdmin
-    isAdmin
+    isAdmin,
+
+    // Rating methods
+    insertRating,
+    getAllRatings
 
 };

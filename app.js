@@ -94,6 +94,7 @@ initializeDatabase().then(() => {
     const appointmentsRoutes = require('./routes/appointmentsRoutes');
     const forumRoutes = require('./routes/forumRoutes'); 
     const statisticsRoutes = require('./routes/statisticsRoutes');
+    const ratingRoutes = require('./routes/ratingRoutes');
 
     app.use('/', pageRoutes);
     app.use('/auth', authRoutes);
@@ -101,8 +102,8 @@ initializeDatabase().then(() => {
     app.use(doctorRoutes);
     app.use(appointmentsRoutes);
     app.use('/forum', forumRoutes);
-    app.use('/statistics', statisticsRoutes); // Changed to match the API route
-
+    app.use('/statistics', statisticsRoutes); 
+    app.use('/api/rate', ratingRoutes);
 
     // Start the server
     const PORT = process.env.PORT || 5000;
