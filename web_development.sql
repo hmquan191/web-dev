@@ -507,7 +507,9 @@ CREATE TABLE `rating` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
-
+INSERT INTO `rating` (`id`, `name`, `stars`, `comment`, `created_at`) VALUES
+(1, 'HMQ', 5, 'good', '2024-07-12 01:20:21'),
+(2, 'HMQ', 4, 'good', '2024-07-12 01:42:47');
 --
 -- Table structure for table `users`
 --

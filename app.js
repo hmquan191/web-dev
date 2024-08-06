@@ -95,6 +95,7 @@ initializeDatabase().then(() => {
     const forumRoutes = require('./routes/forumRoutes'); 
     const statisticsRoutes = require('./routes/statisticsRoutes');
     const ratingRoutes = require('./routes/ratingRoutes');
+    const locationRoutes = require('./routes/locationRoutes');
 
     app.use('/', pageRoutes);
     app.use('/auth', authRoutes);
@@ -104,7 +105,7 @@ initializeDatabase().then(() => {
     app.use('/forum', forumRoutes);
     app.use('/statistics', statisticsRoutes); 
     app.use('/api/rate', ratingRoutes);
-
+    app.use('/api/location', locationRoutes);
     // Start the server
     const PORT = process.env.PORT || 5000;
     app.listen(PORT, () => {
