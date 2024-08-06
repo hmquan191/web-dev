@@ -20,9 +20,11 @@
       cursor: pointer;
     }
     .leaflet-routing-container {
-      background: white !important; /* Make background white to enhance visibility */
+      background: white !important; /* Background color for better visibility */
       border-radius: 5px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+      max-height: 300px; /* Maximum height for the container */
+      overflow-y: auto; /* Enable vertical scrolling */
     }
     .leaflet-routing-instructions {
       font-size: 14px !important; /* Adjust font size for better readability */
@@ -102,10 +104,19 @@
         createMarker: function() { return null; }, // Remove default markers
         lineOptions: {
           styles: [
-            { color: 'blue', weight: 6, opacity: 0.8, dashArray: '10, 5' } // Brighter color, thicker line, and dash pattern
+            { color: 'blue', weight: 5, opacity: 0.8, dashArray: '10, 5' } // Brighter color, thicker line, and dash pattern
           ]
-        }
+        },
+        plan: L.Routing.plan([
+          L.latLng(userLatLng),
+          L.latLng(pharmacyLatLng)
+        ], {
+          createMarker: function() { return null; } // No markers for waypoints
+        })
       }).addTo(map);
+      
+      // Adjust map view to ensure all markers and routes are visible
+      map.fitBounds([userLatLng, pharmacyLatLng]);
     }
 
     function handleError(error) {
